@@ -10,4 +10,4 @@ An application for Xinzhu Middle School that can display time and class schedule
 >
 > I hope someone can help me solve this problem...
 
-<ins>**Download the source file and run `Time.pyw` in the `Time` folder to see the effect!**</ins>
+<ins>**Download the source file and run Time.pyw in the Time folder to see the effect!**</ins>
