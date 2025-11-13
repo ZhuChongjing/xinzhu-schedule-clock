@@ -1,6 +1,5 @@
 from datetime import datetime
 import tkinter as tk
-from tkinter import ttk
 import sys, pygetwindow
 
 # 先创建主窗口，使config.py可以创建字体
@@ -42,7 +41,7 @@ schedule_text = f"""\
     
 # 重要变量 -------------------------------------------------------------------------------------------------------------
 is_fullscreen = False
-is_narrow = False
+is_small = False
 normal_geometry = f"{WINDOW_WIDTH}x{WINDOW_HEIGHT}+0+0"
 
 is_dropdown_open = False
@@ -61,7 +60,7 @@ def update_time_and_text():
     formatted_time = now.strftime(f"%H:%M:%S")
     formatted_date = now.strftime(f"(%m.%d)")
     time_label.config(text=formatted_time)
-    narrow_date_label.config(text=f"第{current_week_num}周{formatted_date}")
+    small_date_label.config(text=f"第{current_week_num}周{formatted_date}")
     
     update_period_text(now)
     
@@ -76,38 +75,24 @@ def update_period_text(current_time):
     
     time_ranges = get_time_ranges()
 
-    for (start_h, start_m, start_s, 
-         end_h, end_m, end_s, text) in time_ranges:
+    for (start_h, start_m, start_s, end_h, end_m, end_s, class_text, status) in time_ranges:
         
         start_total = to_seconds(start_h, start_m, start_s)
         end_total = to_seconds(end_h, end_m, end_s)
         
         if start_total > end_total:
             if current_total_seconds >= start_total or current_total_seconds < end_total:
-                parts = text.split()
-                if len(parts) == 3:
-                    a_label.config(text=parts[0])
-                    b_label.config(text=parts[1])
-                    c_label.config(text=parts[2])
-                    narrow_b_label.config(text=parts[1])
-                    narrow_c_label.config(text=parts[2])
+                class_label.config(text=class_text)
+                small_status_label.config(text=status)
                 return
         else:
             if start_total <= current_total_seconds < end_total:
-                parts = text.split()
-                if len(parts) == 3:
-                    a_label.config(text=parts[0])
-                    b_label.config(text=parts[1])
-                    c_label.config(text=parts[2])
-                    narrow_b_label.config(text=parts[1])
-                    narrow_c_label.config(text=parts[2])
+                class_label.config(text=class_text)
+                small_status_label.config(text=status)
                 return
 
-    a_label.config(text="---")
-    b_label.config(text="---")
-    c_label.config(text="---")
-    narrow_b_label.config(text="---")
-    narrow_c_label.config(text="---")
+    class_label.config(text="---")
+    small_status_label.config(text="---")
     
 def toggle_fullscreen(event=None):
     global is_fullscreen, normal_geometry, fullscreen_window
@@ -183,7 +168,7 @@ def open_control_panel():
         global_control_window.lift()
         return
     global_control_window = tk.Toplevel(root)
-    global_control_window.title("控制面板")
+    global_control_window.title("课程")
     global_control_window.geometry(f"{CONTROL_PANEL_WIDTH}x{CONTROL_PANEL_HEIGHT}")
     global_control_window.config(bg=CONTROL_PANEL_BACKGROUND_COLOR)
     global_control_window.wm_attributes("-topmost", True)
@@ -203,51 +188,6 @@ def open_control_panel():
     )
     schedule_label.pack(fill=tk.X)
     
-    # 按钮 --------------------------------------------------------------------------------------------
-    buttons_frame = tk.Frame(global_control_window, bg=CONTROL_PANEL_FRAME_BACKGROUND_COLOR)
-    buttons_frame.pack(padx=20, pady=20, fill=tk.X, side=tk.TOP)
-
-    style = ttk.Style()
-    style.configure(
-        "Chinese.TButton",
-        font=CONTROL_PANEL_BUTTON_FONT_CHINESE,
-        foreground=CONTROL_PANEL_BUTTON_FOREGROUND_COLOR,
-        background=CONTROL_PANEL_BUTTON_BACKGROUND_COLOR,
-        borderwidth=0,
-        relief="flat",
-        padding=0
-    )
-    style.configure(
-        "English.TButton",
-        font=CONTROL_PANEL_BUTTON_FONT_ENGLISH,
-        foreground=CONTROL_PANEL_BUTTON_FOREGROUND_COLOR,
-        background=CONTROL_PANEL_BUTTON_BACKGROUND_COLOR,
-        borderwidth=0,
-        relief="flat",
-        padding=4
-    )
-
-    tk.Label(buttons_frame, text="快捷指令", font=CONTROL_PANEL_FONT, bg=CONTROL_PANEL_FRAME_BACKGROUND_COLOR).grid(row=0, column=0, padx=10, pady=0, sticky="w")
-
-    ttk.Button(buttons_frame, text="explorer.exe",
-            style="English.TButton",
-            command=start_desktop
-    ).grid(row=1, column=0, padx=10, pady=10)
-
-    ttk.Button(buttons_frame, text="taskkill /f /im explorer.exe",
-            style="English.TButton",
-            command=close_desktop
-    ).grid(row=1, column=1, padx=10, pady=10)
-
-    ttk.Button(buttons_frame, text="cmd.exe",
-            style="English.TButton",
-            command=start_cmd
-    ).grid(row=1, column=2, padx=10, pady=10)
-
-    ttk.Button(buttons_frame, text="powershell.exe",
-            style="English.TButton",
-            command=start_powershell
-    ).grid(row=1, column=3, padx=10, pady=10)
 
 # 主窗口 -------------------------------------------------------------------------------------------------------------
 root.deiconify()
@@ -265,7 +205,7 @@ root.bind("<ButtonRelease-1>", on_release)
 
 # 主框架 -------------------------------------------------------------------------------------------------------------
 main_frame = tk.Frame(root, bg=FRAME_BACKGROUND_COLOR)
-main_frame.pack(padx=10, pady=10, fill=tk.X)
+main_frame.pack(padx=FRAME_PADX, pady=MAIN_FRAME_PADY, fill=tk.X)
 
 time_label = tk.Label(
     main_frame,
@@ -277,7 +217,7 @@ time_label = tk.Label(
     width=8
 )
 
-a_label = tk.Label(
+class_label = tk.Label(
     main_frame,
     text="---",
     font=DISPLAY_FONT,
@@ -287,29 +227,9 @@ a_label = tk.Label(
     width=8
 )
 
-b_label = tk.Label(
-    main_frame,
-    text="---",
-    font=DISPLAY_FONT,
-    justify="left",
-    bg=BACKGROUND_COLOR,
-    fg=FOREGROUND_COLOR,
-    width=13
-)
-
-c_label = tk.Label(
-    main_frame,
-    text="---",
-    font=DISPLAY_FONT,
-    justify="left",
-    bg=BACKGROUND_COLOR,
-    fg=FOREGROUND_COLOR,
-    width=10
-)
-
 control_panel_button = tk.Button(
     main_frame,
-    text="更多",
+    text="课程",
     font=BUTTON_FONT,
     bg=CONTROL_PANEL_BUTTON_BACKGROUND_COLOR,
     fg=CONTROL_PANEL_BUTTON_FOREGROUND_COLOR,
@@ -317,47 +237,36 @@ control_panel_button = tk.Button(
 )
 
 # 小字框架 -------------------------------------------------------------------------------------------------------------
-narrow_frame = tk.Frame(root, bg=FRAME_BACKGROUND_COLOR)
-narrow_frame.pack(padx=10, pady=0, fill=tk.X)
+small_frame = tk.Frame(root, bg=FRAME_BACKGROUND_COLOR)
+small_frame.pack(padx=FRAME_PADX, pady=SMALL_FRAME_PADY, fill=tk.X)
 
-narrow_date_label = tk.Label(
-    narrow_frame,
+small_date_label = tk.Label(
+    small_frame,
     text="---",
-    font=NARROW_FONT,
-    justify="left",
+    font=SMALL_FONT,
+    anchor="w",
     bg=BACKGROUND_COLOR,
     fg=FOREGROUND_COLOR,
-    width=12
+    width=13
 )
 
-narrow_b_label = tk.Label(
-    narrow_frame,
+small_status_label = tk.Label(
+    small_frame,
     text="---",
-    font=NARROW_FONT,
-    justify="left",
+    font=SMALL_FONT,
+    anchor="e",
     bg=BACKGROUND_COLOR,
     fg=FOREGROUND_COLOR,
-    width=12
-)
-
-narrow_c_label = tk.Label(
-    narrow_frame,
-    text="---",
-    font=NARROW_FONT,
-    justify="left",
-    bg=BACKGROUND_COLOR,
-    fg=FOREGROUND_COLOR,
-    width=10
+    width=13
 )
 
 # 网格布局 -------------------------------------------------------------------------------------------------------------
-time_label.grid(row=0, column=0, padx=(5, 10))
-a_label.grid(row=0, column=1, padx=(10, 10))
-control_panel_button.grid(row=0, column=2, padx=(10, 0))
+time_label.grid(          row=0, column=0, padx=(MAIN_FRAME_LEFT_MARGIN,   MAIN_FRAME_ELEMENTS_PADX))
+class_label.grid(         row=0, column=1, padx=(MAIN_FRAME_ELEMENTS_PADX, MAIN_FRAME_ELEMENTS_PADX))
+control_panel_button.grid(row=0, column=2, padx=(MAIN_FRAME_ELEMENTS_PADX, 0                       ))
 
-narrow_date_label.grid(row=0, column=0, padx=(5, 10))
-narrow_b_label.grid(row=0, column=1, padx=(10, 10))
-narrow_c_label.grid(row=0, column=2, padx=(10, 0))
+small_date_label.grid(  row=0, column=0, padx=(SMALL_FRAME_LEFT_MARGIN,   SMALL_FRAME_ELEMENTS_PADX))
+small_status_label.grid(row=0, column=1, padx=(SMALL_FRAME_ELEMENTS_PADX, 0                        ))
 
 # 绑定事件 -------------------------------------------------------------------------------------------------------------
 time_label.bind("<Double-1>", toggle_fullscreen)

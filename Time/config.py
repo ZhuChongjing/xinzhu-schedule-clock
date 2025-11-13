@@ -16,10 +16,6 @@ SUNDAY = 7
 # 课程设置 --------------------------------------------------------------------------------------------
 FIRST_DAY = "2025-09-01"
 
-BEFORE_CLASS = "准备上课"
-DURING_CLASS = "认真听讲"
-CLASS_BREAK = "记得擦黑板"
-
 START_SECOND = 21
 END_SECOND = 42
 
@@ -31,30 +27,41 @@ WINDOW_HEIGHT = 95
 WINDOW_ALPHA = 0.5
 
 CONTROL_PANEL_WIDTH = 880
-CONTROL_PANEL_HEIGHT = 600
+CONTROL_PANEL_HEIGHT = 475
 
 # 颜色 --------------------------------------------------------------------------------------------
-WINDOW_BACKGROUND_COLOR = "#ffffff"
-FRAME_BACKGROUND_COLOR = "#ffffff"
+WINDOW_BACKGROUND_COLOR = "#FFFFFF"
+FRAME_BACKGROUND_COLOR = "#FFFFFF"
 FULLSCREEN_WINDOW_BACKGROUND_COLOR = "#000000"
-FULLSCREEN_WINDOW_FOREGROUND_COLOR = "#ffffff"
-BACKGROUND_COLOR = "#ffffff"
+FULLSCREEN_WINDOW_FOREGROUND_COLOR = "#FFFFFF"
+BACKGROUND_COLOR = "#FFFFFF"
 FOREGROUND_COLOR = "#000000"
-BUTTON_BACKGROUND_COLOR = "#ffffff"
+BUTTON_BACKGROUND_COLOR = "#FFFFFF"
 BUTTON_FOREGROUND_COLOR = "#000000"
 
-CONTROL_PANEL_BACKGROUND_COLOR = "#ffffff"
+CONTROL_PANEL_BACKGROUND_COLOR = "#FFFFFF"
 CONTROL_PANEL_FOREGROUND_COLOR = "#000000"
-CONTROL_PANEL_FRAME_BACKGROUND_COLOR = "#ffffff"
-CONTROL_PANEL_BUTTON_BACKGROUND_COLOR = "#ffffff"
+CONTROL_PANEL_FRAME_BACKGROUND_COLOR = "#FFFFFF"
+CONTROL_PANEL_BUTTON_BACKGROUND_COLOR = "#FFFFFF"
 CONTROL_PANEL_BUTTON_FOREGROUND_COLOR = "#000000"
 
 # 字体 --------------------------------------------------------------------------------------------
 DISPLAY_FONT = font.Font(family="KaiTi", size=25, weight="bold")
-NARROW_FONT = font.Font(family="KaiTi", size=15, weight="normal")
+SMALL_FONT = font.Font(family="KaiTi", size=20, weight="normal")
 SCHEDULE_FONT = font.Font(family="KaiTi", size=15, weight="normal")
 BUTTON_FONT = font.Font(family="KaiTi", size=15, weight="normal")
 FULLSCREEN_FONT = font.Font(family="KaiTi", size=200, weight="bold")
 CONTROL_PANEL_FONT = font.Font(family="KaiTi", size=20, weight="normal")
 CONTROL_PANEL_BUTTON_FONT_CHINESE = font.Font(family="KaiTi", size=14, weight="normal")
 CONTROL_PANEL_BUTTON_FONT_ENGLISH = font.Font(family="Consolas", size=14, weight="normal")
+
+# 布局 --------------------------------------------------------------------------------------------
+FRAME_PADX = 8
+
+MAIN_FRAME_PADY = FRAME_PADX
+MAIN_FRAME_LEFT_MARGIN = 5
+MAIN_FRAME_ELEMENTS_PADX = 10
+
+SMALL_FRAME_PADY = 0
+SMALL_FRAME_LEFT_MARGIN = 5
+SMALL_FRAME_ELEMENTS_PADX = 10
